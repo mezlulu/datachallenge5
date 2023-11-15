@@ -12,6 +12,8 @@ library(tidyverse)
 library(dendextend)
 ```
 
+## link: https://github.com/mezlulu/datachallenge5
+
 ## Problem 1
 
 The appropriate number of clusters for this data is one, when k = 2. it appears that there is an “elbow” at k = 2 clusters, where the total within sum of squares begins to level off.
