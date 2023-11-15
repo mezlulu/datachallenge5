@@ -14,10 +14,9 @@ library(dendextend)
 
 ## Problem 1
 
-### The appropriate number of clusters for this data is one, when k = 2. it appears that there is an “elbow” at k = 2 clusters, where the total within sum of squares begins to level off.
+The appropriate number of clusters for this data is one, when k = 2. it appears that there is an “elbow” at k = 2 clusters, where the total within sum of squares begins to level off.
 
-Cluster 1: All 20 samples in this cluster are labeled as 'Diseased'.
-Cluster 2: All 20 samples in this cluster are labeled as 'Healthy'.
+Cluster 1: All 20 samples in this cluster are labeled as 'Diseased'. Cluster 2: All 20 samples in this cluster are labeled as 'Healthy'. By the elbow plot, each cluster is perfectly separated into either 'Diseased' or 'Healthy'. Cluster 1 contains only healthy individuals, and Cluster 2 contains only diseased individuals. There appears to be a strong association between the cluster assignment and disease status since the counts are exclusively in off-diagonal cells. 
 
 ```{r}
 data <- read.csv("/Users/lulu/Downloads/Ch10Ex11.csv",header=FALSE)
@@ -40,7 +39,7 @@ ggplot(wss_values,
     geom_point() +
 geom_line() # create plot of within-cluster sum of squares vs. cluster size
 
-set.seed(123)
+set.seed(100)
 k <- 2  # number of clusters from the elbow plot
 km<- kmeans(data, centers = k, nstart = 50)
 
@@ -51,14 +50,17 @@ table(Cluster = km$cluster, DiseaseStatus = disease_status) # cluster assignment
 
 ## Problem 2 Perform hierarchical clustering on the same scaled data set.
 
-Complete Linkage (Euclidean Distance)
+Complete Linkage
 Cluster 1: 20 samples, Cluster 2: 9 samples, Cluster 3: 11 samples
+Complete linkage uses the maximum distance between points in two clusters to form a new cluster. Create a relatively balanced distribution across the clusters, without any single cluster dominating.
 
-Single Linkage (Euclidean Distance)
+Single Linkage 
 Cluster 1: 19 samples, Cluster 2: 1 sample, Cluster 3: 20 samples
+Single linkage uses the minimum distance between points in two clusters for clustering. Clusters can be strung together, leading to one large cluster and several smaller ones, in this case here with one cluster having only 1 item.
 
-Average Linkage (Euclidean Distance)
+Average Linkage 
 Cluster 1: 20 samples, Cluster 2: 19 samples, Cluster 3: 1 sample
+Average linkage takes the average distance between all pairs of points in two clusters. This method has produced two large clusters and one very small cluster, suggesting that most data points are more similar to each other than to the points in the small cluster.
 
 ```{r, out.width = "100%", fig.dim=c(20,10)}
 dist_data <- dist(data)  #  calculate and inter-observation 'Eucledian distance' matrix
@@ -82,3 +84,6 @@ table(clusters_average_euclidean)
 ```
 ## Problem 3 Write a few sentences commenting on the results you obtained in Problems 1 and 2.
 
+The first contingency table shows a perfect separation between the clusters and disease status, with one cluster containing all the diseased cases and the other containing all the healthy cases. The Hierarchical Clustering table vary depending on what linkage method is used. Different distribution of cases across clusters for complete, single, and average linkage methods.  Complete linkage results in the most balanced cluster sizes, which might be suitable for applications where a more uniform cluster size is desired. Single and average linkage have resulted in one cluster with a single item, indicating the presence of outliers or very dissimilar observations that do not group well with others.
+
+The k-means clustering method appears to be more effective for creating clusters in this case, possibly due to its centroid-based approach that optimizes for variance within clusters. Hierarchical clustering does not align clusters as well with the disease status.
